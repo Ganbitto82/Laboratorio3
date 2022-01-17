@@ -1,0 +1,13 @@
+<resources>
+   <string name="app_name">Laboratorio_3</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_closed">closed</string>
+    <string name="channelID">chanelId</string>
+    <string name="channel_description">channel_description</string>
+    <string name="CANAL_MENSAJES_ID">CANAL_MENSAJES_ID</string>
+    <string name="CANAL_1">canal_1</string>
+
+
+</resources>
