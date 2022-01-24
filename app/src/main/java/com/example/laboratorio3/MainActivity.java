@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -43,11 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         RecordotorioReceiver rec= new RecordotorioReceiver();
         IntentFilter intentFilter=new IntentFilter();
-      //  intentFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-       // intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-       // intentFilter.addAction(Intent.ACTION_BATTERY_LOW);
         intentFilter.addAction(RECORDATORIO);
-       // intentFilter.addAction(CANAL_MENSAJES_ID_1);
         this.registerReceiver(rec,intentFilter);
         createNotificationChannel();
         setComponentes();
