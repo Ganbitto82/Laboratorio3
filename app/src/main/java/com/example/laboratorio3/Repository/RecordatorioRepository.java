@@ -7,27 +7,21 @@ import com.example.laboratorio3.SharePreferences.RecordatorioPreferencesDataSour
 public class RecordatorioRepository {
 
     private final RecordatorioDataSource datasource;
-    private RecordatorioDataSource.GuardarRecordatorioCallback callback;
+   // private RecordatorioDataSource.GuardarRecordatorioCallback callback;
 
     public RecordatorioRepository(final RecordatorioDataSource datasource) {
         this.datasource = datasource;
     }
 
-    public void save (Recordatorio r , RecordatorioPreferencesDataSource preferences){
 
-        try {
-            preferences.guardarRecordatorio( r,callback = new RecordatorioDataSource.GuardarRecordatorioCallback() {
-                @Override
-                public void resultado(boolean exito) {
-                    if(exito)
-                        datasource.guardarRecordatorio(r,callback);
-                }
-            });
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
+    public void saveRecordatorio(Recordatorio reco,RecordatorioDataSource.GuardarRecordatorioCallback callback){
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                datasource.guardarRecordatorio(reco,callback);
+            }
+        };
+        r.run();
     }
 
 

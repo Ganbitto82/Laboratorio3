@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 
@@ -21,6 +22,7 @@ import android.os.PersistableBundle;
 
 import android.view.MenuItem;
 
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 
@@ -48,9 +50,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.registerReceiver(rec,intentFilter);
         createNotificationChannel();
         setComponentes();
+        pantallaDeInicio();
+
 
 
     }
+
+    private void pantallaDeInicio() {
+        FragmentManager fragm =getSupportFragmentManager();
+        CreacionRecordatorioFragment  create=new CreacionRecordatorioFragment();
+        fragm.beginTransaction().replace(R.id.contenido,create).addToBackStack(null).commit();
+    }
+
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
@@ -61,10 +72,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NotificationManager notificationManager =getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
 
-
         }
     }
 
+    @SuppressLint("ResourceType")
     public void setComponentes() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -77,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.setDrawerIndicatorEnabled(true);
         toggle.syncState();
+
+
 
 
     }
@@ -119,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
         }
-      titulo.setText(item.getTitle());
+     // titulo.setText(item.getTitle());
 
       drawer.closeDrawers();
     }

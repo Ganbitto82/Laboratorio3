@@ -7,6 +7,12 @@ import android.preference.PreferenceManager;
 import com.example.laboratorio3.DataSource.RecordatorioDataSource;
 import com.example.laboratorio3.Entity.Recordatorio;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 public class RecordatorioPreferencesDataSource implements RecordatorioDataSource {
     private final SharedPreferences sharedPreferences;
 
@@ -16,21 +22,39 @@ public class RecordatorioPreferencesDataSource implements RecordatorioDataSource
 
     @Override
     public void guardarRecordatorio(Recordatorio recordatorio, GuardarRecordatorioCallback callback) {
-
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String key = String.valueOf(recordatorio.hashCode());
         try {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("FECHA", String.valueOf(recordatorio.getFecha()));
-            editor.putString("TEXTO", String.valueOf(recordatorio.getTexto()));
+            editor.putString(key,recordatorio.toJSON().toString());
             editor.commit();
-            callback.resultado(true);
+        }catch (Exception e){
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        Boolean result= sharedPreferences.contains(key);
+        callback.resultado(result);
     }
 
     @Override
     public void recuperarRecordatorios(RecuperarRecordatorioCallback callback) {
+        List<Recordatorio> listaRecordatorio= new ArrayList<>();
+        Set<String> listaPreference= sharedPreferences.getAll().keySet();
+        boolean exito= false;
+        if(!listaPreference.isEmpty()){
+            exito= true;
+
+            Recordatorio nuevo;
+            JSONObject nuvJson;
+            for (String i: listaPreference ) {
+                try {
+                    nuvJson= new JSONObject(sharedPreferences.getString(i,null));
+                    nuevo= new Recordatorio(nuvJson);
+                    listaRecordatorio.add(nuevo);
+                }catch (Exception e){}
+            }
+        }
+        callback.resultado(exito,listaRecordatorio);
+
+
 
     }
 }

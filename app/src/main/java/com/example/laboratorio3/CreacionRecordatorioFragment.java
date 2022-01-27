@@ -3,26 +3,23 @@ package com.example.laboratorio3;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -31,10 +28,9 @@ import com.example.laboratorio3.DataSource.RecordatorioDataSource;
 import com.example.laboratorio3.Entity.Recordatorio;
 import com.example.laboratorio3.Repository.RecordatorioRepository;
 import com.example.laboratorio3.SharePreferences.RecordatorioPreferencesDataSource;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,6 +43,11 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
     private DatePickerDialog.OnDateSetListener dataSetListener;
     public static String RECORDATORIO = "com.example.laboratorio3";
     private  RecordatorioDataSource datasource;
+    private RecordatorioRepository recordatorioRepository,repo;
+    private FloatingActionButton btonFloting;
+    private MenuItem item;
+
+
 
     public CreacionRecordatorioFragment() {
         // Required empty public constructor
@@ -70,11 +71,13 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
         editTextDate = (EditText) view.findViewById(R.id.editTextFecha);
         btonDate = (Button) view.findViewById(R.id.btonDate);
         editTextHora = (EditText) view.findViewById(R.id.editTextHora);
+        btonFloting= (FloatingActionButton) view.findViewById(R.id.btonFloting);
         btonHora = (Button) view.findViewById(R.id.btonHora);
         btonGuardar = (Button) view.findViewById(R.id.btonGuardar);
         btonDate.setOnClickListener(this);
         btonHora.setOnClickListener(this);
         btonGuardar.setOnClickListener(this);
+
 
     }
 
@@ -114,7 +117,17 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                editTextDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                                String dia,mes,anio;
+                                if(dayOfMonth< 10)
+                                    dia="0"+dayOfMonth;
+                                else
+                                    dia= String.valueOf(dayOfMonth);
+                                if(month+1 < 10)
+                                    mes="0"+ (month+1);
+                                else
+                                    mes= String.valueOf(month+1);
+                                anio= String.valueOf(year);
+                                editTextDate.setText(dia+"-"+mes+"-"+anio);
 
                             }
                         }, year, month, day);
@@ -122,11 +135,6 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
 
     }
 
-    private Date conversor(EditText editTextDate) throws Exception {
-    String sDate=editTextDate.toString();
-    Date date= new SimpleDateFormat("dd/mm/yyyy").parse(sDate);
-    return date;
-    }
 
     private void setHora() {
         Calendar calendar = Calendar.getInstance();
@@ -141,7 +149,7 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         calendar.set(Calendar.SECOND, 00);
-                        SimpleDateFormat timeformat = new SimpleDateFormat("HH:mm a");
+                        SimpleDateFormat timeformat = new SimpleDateFormat("HH:mm");
                         String formatedDate = timeformat.format(calendar.getTime());
                         editTextHora.setText(formatedDate);
                         starAlarm(calendar);
@@ -176,6 +184,9 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
     }
 
     public void guardar(View view) {
+     /*----------------------------------------------------------------------------*/
+        //Valida los datos de entrada
+
         final int[] flag = {0};
 
         //Toast.makeText (getContext(),"editTextRecordatorio" + editTextRecordatorio.getText().toString() ,Toast.LENGTH_LONG).show();
@@ -202,41 +213,63 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
             flag[0] = 0;
 
         }
+        /*----------------------------------------------------------------------------*/
+
+        //Guarda la preferencia
         if (flag[0] == 0) {
-       /* Toast.makeText (getContext(),"Se guarda",Toast.LENGTH_LONG).show();
-        btonGuardar.setEnabled(false);*/
+
+           // btonGuardar.setVisibility();
 
 
-            RecordatorioRepository recordatorioRepository = new RecordatorioRepository(datasource = new RecordatorioDataSource() {
-                @Override
-                public void guardarRecordatorio(Recordatorio recordatorio, GuardarRecordatorioCallback callback) {
-                    Toast.makeText(getContext(), "llegue", Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void recuperarRecordatorios(RecuperarRecordatorioCallback callback) {
-
-                }
-            });
-            RecordatorioPreferencesDataSource rp = new RecordatorioPreferencesDataSource(getContext());
+            repo= new RecordatorioRepository(new RecordatorioPreferencesDataSource(getContext()));
             Recordatorio r = new Recordatorio();
             r.setTexto(editTextRecordatorio.getText().toString());
             try {
-                r.setFecha(conversor(editTextDate));
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+
+                String dateInString = editTextDate.getText()+" "+ editTextHora.getText() ;
+                Date date = sdf.parse(dateInString);
+                Log.d("date",date.toString());
+                r.setFecha(date);
+
+               // Toast.makeText(getContext(),"dateString" + dateInString,Toast.LENGTH_LONG).show();
 
             } catch (Exception e) {
+
                 e.printStackTrace();
             }
 
-            recordatorioRepository.save(r, rp);
 
+
+            repo.saveRecordatorio(r, new RecordatorioDataSource.GuardarRecordatorioCallback() {
+                @Override
+                public void resultado(boolean exito) {
+                    if(exito){
+                    Toast.makeText(getContext(), "Se guardo", Toast.LENGTH_LONG).show();
+                        btonGuardar.setVisibility(View.GONE);
+                        btonFloting.setVisibility(View.VISIBLE);
+
+                    }
+
+                }
+            });
+              btonFloting.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      FragmentManager fragm = getActivity().getSupportFragmentManager();
+                      ListadoRecodatorioFragment listado=new ListadoRecodatorioFragment();
+                      fragm.beginTransaction().replace(R.id.contenido,listado).addToBackStack(null).commit();
+                  }
+              });
+
+            }
         }
 
     }
 
 
 
-}
+
 
 
 

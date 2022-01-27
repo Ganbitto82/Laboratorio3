@@ -1,6 +1,9 @@
 package com.example.laboratorio3.Entity;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -45,5 +48,20 @@ public class Recordatorio {
     @Override
     public int hashCode() {
         return Objects.hash(texto, fecha);
+    }
+
+    public  Recordatorio(JSONObject json) {
+        try {
+            this.texto = json.getString("mensaje");
+            this.fecha = new Date(json.getLong("fecha"));
+        }catch (Exception e){
+
+        }
+    }
+    public JSONObject toJSON() throws JSONException {
+        JSONObject resultado= new JSONObject();
+        resultado.put("mensaje",this.texto);
+        resultado.put("fecha",this.fecha.getTime());
+        return resultado;
     }
 }
