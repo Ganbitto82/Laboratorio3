@@ -41,7 +41,6 @@ public class RecordatorioPreferencesDataSource implements RecordatorioDataSource
         boolean exito= false;
         if(!listaPreference.isEmpty()){
             exito= true;
-
             Recordatorio nuevo;
             JSONObject nuvJson;
             for (String i: listaPreference ) {

@@ -23,6 +23,16 @@ public class RecordatorioRepository {
         };
         r.run();
     }
+    public void getRecordatorios(RecordatorioDataSource.RecuperarRecordatorioCallback callback){
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                datasource.recuperarRecordatorios(callback);
+            }
+        };
+        r.run();
+    }
 
 
 }

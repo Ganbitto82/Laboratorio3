@@ -217,10 +217,6 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
 
         //Guarda la preferencia
         if (flag[0] == 0) {
-
-           // btonGuardar.setVisibility();
-
-
             repo= new RecordatorioRepository(new RecordatorioPreferencesDataSource(getContext()));
             Recordatorio r = new Recordatorio();
             r.setTexto(editTextRecordatorio.getText().toString());

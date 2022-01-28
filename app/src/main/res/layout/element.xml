@@ -38,7 +38,7 @@
                 app:srcCompat="@drawable/baseline_watch_later_24" />
 
             <TextView
-                android:id="@+id/textViewFecha"
+                android:id="@+id/tvFecha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fecha"
@@ -52,14 +52,14 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/imgComent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/baseline_message_24" />
 
             <TextView
-                android:id="@+id/textViewtText"
+                android:id="@+id/tvRecordatorio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

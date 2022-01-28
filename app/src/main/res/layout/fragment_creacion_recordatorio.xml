@@ -130,7 +130,6 @@
         android:layout_margin="19dp"
         android:layout_marginBottom="19dp"
         android:clickable="true"
-        style="@style/Theme.MaterialComponents.Light.NoActionBar"
         android:layout_gravity="end|bottom"
         android:visibility="gone"
         app:backgroundTint="@color/md_deep_purple_700"

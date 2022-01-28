@@ -18,7 +18,7 @@
          />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerCategoria"
+        android:id="@+id/recyclerRecordatorio"
         android:layout_width="357dp"
         android:layout_height="462dp"
         android:layout_marginHorizontal="20px"
