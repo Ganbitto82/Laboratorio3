@@ -35,6 +35,8 @@ public class ListadoRecodatorioFragment extends Fragment {
     private RecordatorioViewHolder recordatorioViewHolder;
     private List<Recordatorio> listRecordatorio;
     private RecordatorioRepository repository;
+    private RecyclerView.LayoutManager layoutManager;
+
 
     public ListadoRecodatorioFragment() {
         // Required empty public constructor
@@ -61,35 +63,38 @@ public class ListadoRecodatorioFragment extends Fragment {
 
     }
     private void init() {
+        listRecordatorio=new ArrayList<Recordatorio>();
+        recordatorioViewHolder= new RecordatorioViewHolder(listRecordatorio);
+        recyclerView.setHasFixedSize(true);
+        layoutManager= new LinearLayoutManager(getContext());
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         repository= new RecordatorioRepository(new RecordatorioPreferencesDataSource(getContext()));
         recyclerView.setLayoutManager(manager);
-        listRecordatorio=new ArrayList<Recordatorio>();
-        recordatorioViewHolder= new RecordatorioViewHolder(listRecordatorio);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(recordatorioViewHolder);
+
+        //recordatorioViewHolder= new RecordatorioViewHolder(listRecordatorio);
+        //recyclerView.setLayoutManager(manager);
+       // recyclerView.setAdapter(recordatorioViewHolder);
         repository.getRecordatorios(new RecordatorioDataSource.RecuperarRecordatorioCallback() {
             @Override
             public void resultado(boolean exito, List<Recordatorio> recordatorios) {
-                if (recordatorios!= null && listRecordatorio.isEmpty()){
+                if(recordatorios!=null && listRecordatorio.isEmpty()){
                     if(!exito){
-                        Toast.makeText(getContext(),"Error al traer los recordatorios", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),"Error al traer datos", Toast.LENGTH_LONG).show();
                     }
                     else {
                         recordatorioViewHolder = new RecordatorioViewHolder(recordatorios);
                         recyclerView.setAdapter(recordatorioViewHolder);
-
                         if (!recordatorios.isEmpty()) {
-                            Toast.makeText(getContext(),"No se encontraron Recordatorios",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(),"No hay Recordatorios", Toast.LENGTH_LONG).show();
                         }
                     }
-
+                }
 
 
                 }
 
             }
 
-        });
+        );
     }
 }
