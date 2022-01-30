@@ -43,7 +43,7 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
     private DatePickerDialog.OnDateSetListener dataSetListener;
     public static String RECORDATORIO = "com.example.laboratorio3";
     private  RecordatorioDataSource datasource;
-    private RecordatorioRepository recordatorioRepository,repo;
+    private RecordatorioRepository  repo;
     private FloatingActionButton btonFloting;
     private MenuItem item;
 

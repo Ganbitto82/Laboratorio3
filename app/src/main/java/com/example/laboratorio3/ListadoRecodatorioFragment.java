@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,7 @@ import com.example.laboratorio3.DataSource.RecordatorioDataSource;
 import com.example.laboratorio3.Entity.Recordatorio;
 import com.example.laboratorio3.Repository.RecordatorioRepository;
 import com.example.laboratorio3.SharePreferences.RecordatorioPreferencesDataSource;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +38,7 @@ public class ListadoRecodatorioFragment extends Fragment {
     private List<Recordatorio> listRecordatorio;
     private RecordatorioRepository repository;
     private RecyclerView.LayoutManager layoutManager;
+    private FloatingActionButton btonAddFloting;
 
 
     public ListadoRecodatorioFragment() {
@@ -55,11 +58,24 @@ public class ListadoRecodatorioFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setCompenentes(view);
         init();
+        crearRecordatorio();
+    }
+
+    private void crearRecordatorio() {
+        btonAddFloting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragm = getActivity().getSupportFragmentManager();
+                CreacionRecordatorioFragment creacion=new CreacionRecordatorioFragment();
+                fragm.beginTransaction().replace(R.id.contenido,creacion).addToBackStack(null).commit();
+            }
+        });
     }
 
 
     private void setCompenentes(View view) {
         recyclerView = view.findViewById(R.id.recyclerRecordatorio);
+        btonAddFloting=view.findViewById(R.id.btonAddFloting);
 
     }
     private void init() {
@@ -71,20 +87,17 @@ public class ListadoRecodatorioFragment extends Fragment {
         repository= new RecordatorioRepository(new RecordatorioPreferencesDataSource(getContext()));
         recyclerView.setLayoutManager(manager);
 
-        //recordatorioViewHolder= new RecordatorioViewHolder(listRecordatorio);
-        //recyclerView.setLayoutManager(manager);
-       // recyclerView.setAdapter(recordatorioViewHolder);
         repository.getRecordatorios(new RecordatorioDataSource.RecuperarRecordatorioCallback() {
             @Override
             public void resultado(boolean exito, List<Recordatorio> recordatorios) {
                 if(recordatorios!=null && listRecordatorio.isEmpty()){
                     if(!exito){
-                        Toast.makeText(getContext(),"Error al traer datos", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),"NO hay Recordatorios", Toast.LENGTH_LONG).show();
                     }
                     else {
                         recordatorioViewHolder = new RecordatorioViewHolder(recordatorios);
                         recyclerView.setAdapter(recordatorioViewHolder);
-                        if (!recordatorios.isEmpty()) {
+                        if (recordatorios.isEmpty()) {
                             Toast.makeText(getContext(),"No hay Recordatorios", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -93,8 +106,8 @@ public class ListadoRecodatorioFragment extends Fragment {
 
                 }
 
-            }
+            });
 
-        );
+
     }
 }
