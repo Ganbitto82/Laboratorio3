@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreference;
 
 
 import android.annotation.SuppressLint;
@@ -15,6 +18,7 @@ import android.app.NotificationManager;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +27,9 @@ import android.os.PersistableBundle;
 import android.view.MenuItem;
 
 import android.widget.FrameLayout;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.android.material.navigation.NavigationView;
@@ -46,15 +52,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         RecordotorioReceiver rec= new RecordotorioReceiver();
         IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        intentFilter.addAction(Intent.ACTION_BATTERY_LOW);
         intentFilter.addAction(RECORDATORIO);
         this.registerReceiver(rec,intentFilter);
         createNotificationChannel();
         setComponentes();
         pantallaDeInicio();
 
-
-
-    }
+         }
 
     private void pantallaDeInicio() {
         FragmentManager fragm =getSupportFragmentManager();
@@ -90,23 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
 
-
-
     }
-
-
-    @Override
-    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onPostCreate(savedInstanceState, persistentState);
-        toggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        toggle.onConfigurationChanged(newConfig);
-    }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         selectItemNav(item);
@@ -115,10 +106,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void selectItemNav(@NonNull MenuItem item) {
         FragmentManager fragm =getSupportFragmentManager();
-       TextView titulo= findViewById(R.id.titulo_toolbar);
+        TextView titulo= findViewById(R.id.titulo_toolbar);
         switch (item.getItemId()){
 
             case R.id.listado_recordatorio:
+
                 ListadoRecodatorioFragment listado=new ListadoRecodatorioFragment();
                 fragm.beginTransaction().replace(R.id.contenido,listado).addToBackStack(null).commit();
                 break;

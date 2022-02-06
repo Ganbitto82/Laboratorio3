@@ -1,6 +1,7 @@
 package com.example.laboratorio3.DataSource;
 
-import com.example.laboratorio3.Entity.Recordatorio;
+import com.example.laboratorio3.Model.Recordatorio;
+import com.example.laboratorio3.Mapper.RecordatorioDto;
 
 import java.util.List;
 
@@ -10,10 +11,10 @@ public interface RecordatorioDataSource {
     }
 
     interface RecuperarRecordatorioCallback {
-        void resultado(final boolean exito, final List<Recordatorio> recordatorios);
+        void resultado(final boolean exito, final List<RecordatorioDto> recordatorios);
     }
 
-    void guardarRecordatorio(final Recordatorio recordatorio, final GuardarRecordatorioCallback callback);
+    void guardarRecordatorio(final RecordatorioDto recordatorio, final GuardarRecordatorioCallback callback);
     void recuperarRecordatorios(final RecuperarRecordatorioCallback callback);
 
 

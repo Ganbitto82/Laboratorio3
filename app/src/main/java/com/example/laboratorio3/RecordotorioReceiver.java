@@ -18,7 +18,7 @@ public class RecordotorioReceiver extends BroadcastReceiver {
     public static String RECORDATORIO ="com.example.laboratorio3";
     @Override
     public void onReceive(final Context context, final Intent intent) {
-      /*  StringBuilder sb =new StringBuilder();
+/*       StringBuilder sb =new StringBuilder();
 
         for (String k: intent.getExtras().keySet()){
             sb.append(k+":"+intent.getExtras().get(k));

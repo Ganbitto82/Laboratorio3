@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<PreferenceCategory
+    android:title="Configuracion">
 
     <SwitchPreference
+
         android:defaultValue="false"
-        android:key="switch_preference_1"
-        android:title="Switch preference" />
+        android:key="switchPreferences"
+        android:title="Mostrar notificaciones" />
+
+
+</PreferenceCategory>
+
 </androidx.preference.PreferenceScreen>

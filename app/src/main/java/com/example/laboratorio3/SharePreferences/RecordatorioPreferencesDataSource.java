@@ -5,7 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.example.laboratorio3.DataSource.RecordatorioDataSource;
-import com.example.laboratorio3.Entity.Recordatorio;
+import com.example.laboratorio3.Model.Recordatorio;
+import com.example.laboratorio3.Mapper.RecordatorioDto;
 
 import org.json.JSONObject;
 
@@ -21,11 +22,11 @@ public class RecordatorioPreferencesDataSource implements RecordatorioDataSource
     }
 
     @Override
-    public void guardarRecordatorio(Recordatorio recordatorio, GuardarRecordatorioCallback callback) {
+    public void guardarRecordatorio(RecordatorioDto recordatorioDto, GuardarRecordatorioCallback callback) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        String key = String.valueOf(recordatorio.hashCode());
+        String key = String.valueOf(recordatorioDto.hashCode());
         try {
-            editor.putString(key,recordatorio.toJSON().toString());
+            editor.putString(key,recordatorioDto.toJSON().toString());
             editor.commit();
         }catch (Exception e){
 
@@ -36,22 +37,22 @@ public class RecordatorioPreferencesDataSource implements RecordatorioDataSource
 
     @Override
     public void recuperarRecordatorios(RecuperarRecordatorioCallback callback) {
-        List<Recordatorio> listaRecordatorio= new ArrayList<>();
+        List<RecordatorioDto> listaRecordatorioDto= new ArrayList<RecordatorioDto>();
         Set<String> listaPreference= sharedPreferences.getAll().keySet();
         boolean exito= false;
         if(!listaPreference.isEmpty()){
             exito= true;
-            Recordatorio nuevo;
+            RecordatorioDto nuevo;
             JSONObject nuvJson;
             for (String i: listaPreference ) {
                 try {
                     nuvJson= new JSONObject(sharedPreferences.getString(i,null));
-                    nuevo= new Recordatorio(nuvJson);
-                    listaRecordatorio.add(nuevo);
+                    nuevo= new RecordatorioDto(nuvJson);
+                    listaRecordatorioDto.add(nuevo);
                 }catch (Exception e){}
             }
         }
-        callback.resultado(exito,listaRecordatorio);
+        callback.resultado(exito,listaRecordatorioDto);
 
 
 

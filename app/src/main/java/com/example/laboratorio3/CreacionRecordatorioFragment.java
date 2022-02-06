@@ -5,27 +5,27 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.laboratorio3.DataSource.RecordatorioDataSource;
-import com.example.laboratorio3.Entity.Recordatorio;
+import com.example.laboratorio3.Model.Recordatorio;
 import com.example.laboratorio3.Repository.RecordatorioRepository;
 import com.example.laboratorio3.SharePreferences.RecordatorioPreferencesDataSource;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,13 +39,14 @@ import java.util.Date;
 public class CreacionRecordatorioFragment extends Fragment implements View.OnClickListener {
     private TextInputEditText editTextRecordatorio;
     private EditText editTextDate, editTextHora;
-    private Button btonDate, btonHora, btonGuardar;
+    private Button btonDate, btonHora, btonGuardar,btonSi,btonNo;
     private DatePickerDialog.OnDateSetListener dataSetListener;
     public static String RECORDATORIO = "com.example.laboratorio3";
     private  RecordatorioDataSource datasource;
     private RecordatorioRepository  repo;
     private FloatingActionButton btonFloting;
-    private MenuItem item;
+
+
 
 
 
@@ -56,6 +57,7 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_creacion_recordatorio, container, false);
     }
 
@@ -72,11 +74,13 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
         btonDate = (Button) view.findViewById(R.id.btonDate);
         editTextHora = (EditText) view.findViewById(R.id.editTextHora);
         btonFloting= (FloatingActionButton) view.findViewById(R.id.btonFloting);
+
         btonHora = (Button) view.findViewById(R.id.btonHora);
         btonGuardar = (Button) view.findViewById(R.id.btonGuardar);
         btonDate.setOnClickListener(this);
         btonHora.setOnClickListener(this);
         btonGuardar.setOnClickListener(this);
+
 
 
     }
@@ -95,6 +99,7 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
             case R.id.btonHora:
 
                 //Toast.makeText (getContext(),"hora",Toast.LENGTH_LONG).show();
+
                 setHora();
                 break;
 
@@ -104,6 +109,7 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
         }
 
     }
+
 
     private void setFecha() {
         Calendar calendar = Calendar.getInstance();
@@ -162,26 +168,26 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
 
 
     private void starAlarm(Calendar calendar) {
-        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
-        Intent intent = new Intent();
-        intent.setAction(RECORDATORIO);
-        intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, 0);
+       // PreferenceManager.setDefaultValues(getContext(),R.xml.configuracion,false);
+        SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        if (calendar.before(Calendar.getInstance())) {
-            calendar.add(Calendar.DATE, 1);
+        boolean sp = preferences.getBoolean("switchPreferences", true);
+        if (sp){
+            AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
+            Intent intent = new Intent();
+            intent.setAction(RECORDATORIO);
+            intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, 0);
 
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }else{
+            Toast.makeText(getActivity(), "Su notificacion no será mostrada , si desea mostrala dirijase a configuracion ", Toast.LENGTH_SHORT).show();
         }
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
 
     }
 
-    private void cancelAlarm() {
-        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
-        Intent intent = new Intent(getContext(), RecordotorioReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, 0);
-        alarmManager.cancel(pendingIntent);
-    }
+
 
     public void guardar(View view) {
      /*----------------------------------------------------------------------------*/
@@ -217,7 +223,7 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
 
         //Guarda la preferencia
         if (flag[0] == 0) {
-            repo= new RecordatorioRepository(new RecordatorioPreferencesDataSource(getContext()));
+
             Recordatorio r = new Recordatorio();
             r.setTexto(editTextRecordatorio.getText().toString());
             try {
@@ -236,19 +242,16 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
             }
 
 
+            repo= new RecordatorioRepository(new RecordatorioPreferencesDataSource(getContext()));
+            if( repo.saveRecordatorio(r)){
+                Toast.makeText(getContext(), "Se guardo", Toast.LENGTH_LONG).show();
+                btonGuardar.setVisibility(View.GONE);
+                btonFloting.setVisibility(View.VISIBLE);
+            }
+            else{
+                Toast.makeText(getContext(), "No Se guardo", Toast.LENGTH_SHORT).show();
+            }
 
-            repo.saveRecordatorio(r, new RecordatorioDataSource.GuardarRecordatorioCallback() {
-                @Override
-                public void resultado(boolean exito) {
-                    if(exito){
-                    Toast.makeText(getContext(), "Se guardo", Toast.LENGTH_LONG).show();
-                        btonGuardar.setVisibility(View.GONE);
-                        btonFloting.setVisibility(View.VISIBLE);
-
-                    }
-
-                }
-            });
               btonFloting.setOnClickListener(new View.OnClickListener() {
                   @Override
                   public void onClick(View v) {

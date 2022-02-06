@@ -1,8 +1,15 @@
 package com.example.laboratorio3.Repository;
 
+import android.util.Log;
+
 import com.example.laboratorio3.DataSource.RecordatorioDataSource;
-import com.example.laboratorio3.Entity.Recordatorio;
-import com.example.laboratorio3.SharePreferences.RecordatorioPreferencesDataSource;
+import com.example.laboratorio3.Mapper.RecordatorioDto;
+import com.example.laboratorio3.Model.Recordatorio;
+import com.example.laboratorio3.Mapper.RecordatorioMapper;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RecordatorioRepository {
 
@@ -14,24 +21,45 @@ public class RecordatorioRepository {
     }
 
 
-    public void saveRecordatorio(Recordatorio reco,RecordatorioDataSource.GuardarRecordatorioCallback callback){
+    public boolean saveRecordatorio(Recordatorio reco){
+        final Boolean[] resultado = new Boolean[1];
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                datasource.guardarRecordatorio(reco,callback);
+                RecordatorioMapper rm = new RecordatorioMapper();
+                    datasource.guardarRecordatorio(rm.fromDomainModelTODto(reco), new RecordatorioDataSource.GuardarRecordatorioCallback() {
+                    @Override
+                    public void resultado(boolean exito) {
+                        resultado[0] = new Boolean(exito);
+                    }
+                });
             }
-        };
-        r.run();
-    }
-    public void getRecordatorios(RecordatorioDataSource.RecuperarRecordatorioCallback callback){
 
+        };
+        r.run();
+        return resultado[0];
+    }
+    public List<Recordatorio> getRecordatorios(){
+        final List<Recordatorio>[] recordatorios = new List[]{new ArrayList<Recordatorio>()};
+        RecordatorioMapper rm = new RecordatorioMapper();
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                datasource.recuperarRecordatorios(callback);
+
+                datasource.recuperarRecordatorios(new RecordatorioDataSource.RecuperarRecordatorioCallback() {
+                                     @Override
+                    public void resultado(boolean exito, List<RecordatorioDto> recordatoriosDto) {
+                        if(exito){
+
+                            recordatorios[0] = rm.fromListDtoToListDomainModel(recordatoriosDto).stream().collect(Collectors.toList());
+                        }
+
+                    }
+                });
             }
         };
         r.run();
+        return recordatorios[0];
     }
 
 
