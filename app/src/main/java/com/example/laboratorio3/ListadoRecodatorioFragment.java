@@ -14,9 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.laboratorio3.DataSource.RecordatorioDataSource;
 import com.example.laboratorio3.Model.Recordatorio;
 import com.example.laboratorio3.Repository.RecordatorioRepository;
+import com.example.laboratorio3.Room.RecordatorioRoomDataSource;
 import com.example.laboratorio3.SharePreferences.RecordatorioPreferencesDataSource;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -77,10 +77,11 @@ public class ListadoRecodatorioFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         layoutManager= new LinearLayoutManager(getContext());
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        repo= new RecordatorioRepository(new RecordatorioPreferencesDataSource(getContext()));
         recyclerView.setLayoutManager(manager);
 
         try{
+           // repo= new RecordatorioRepository(new RecordatorioPreferencesDataSource(getContext()));
+            repo= new RecordatorioRepository(RecordatorioRoomDataSource.getInstance(getContext()));
             List<Recordatorio> recordatorios=new ArrayList<Recordatorio>();
 
 

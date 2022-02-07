@@ -1,11 +1,9 @@
 package com.example.laboratorio3.Repository;
 
-import android.util.Log;
-
 import com.example.laboratorio3.DataSource.RecordatorioDataSource;
 import com.example.laboratorio3.Mapper.RecordatorioDto;
-import com.example.laboratorio3.Model.Recordatorio;
 import com.example.laboratorio3.Mapper.RecordatorioMapper;
+import com.example.laboratorio3.Model.Recordatorio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,8 @@ public class RecordatorioRepository {
             @Override
             public void run() {
                 RecordatorioMapper rm = new RecordatorioMapper();
-                    datasource.guardarRecordatorio(rm.fromDomainModelTODto(reco), new RecordatorioDataSource.GuardarRecordatorioCallback() {
+                RecordatorioDto dto=rm.fromDomainModelTODto(reco);
+                datasource.guardarRecordatorio(dto, new RecordatorioDataSource.GuardarRecordatorioCallback() {
                     @Override
                     public void resultado(boolean exito) {
                         resultado[0] = new Boolean(exito);
@@ -47,13 +46,13 @@ public class RecordatorioRepository {
             public void run() {
 
                 datasource.recuperarRecordatorios(new RecordatorioDataSource.RecuperarRecordatorioCallback() {
-                                     @Override
+                    @Override
                     public void resultado(boolean exito, List<RecordatorioDto> recordatoriosDto) {
                         if(exito){
-
+                            //  rm.fromListDtoToListDomainModel(recordatoriosDto);
+                            //Collections.copy(recordatorios,rm.fromListDtoToListDomainModel(recordatoriosDto));
                             recordatorios[0] = rm.fromListDtoToListDomainModel(recordatoriosDto).stream().collect(Collectors.toList());
                         }
-
                     }
                 });
             }

@@ -1,6 +1,5 @@
 package com.example.laboratorio3.DataSource;
 
-import com.example.laboratorio3.Model.Recordatorio;
 import com.example.laboratorio3.Mapper.RecordatorioDto;
 
 import java.util.List;

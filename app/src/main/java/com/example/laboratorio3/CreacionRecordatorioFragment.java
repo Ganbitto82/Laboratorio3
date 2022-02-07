@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.example.laboratorio3.DataSource.RecordatorioDataSource;
 import com.example.laboratorio3.Model.Recordatorio;
 import com.example.laboratorio3.Repository.RecordatorioRepository;
+import com.example.laboratorio3.Room.RecordatorioRoomDataSource;
 import com.example.laboratorio3.SharePreferences.RecordatorioPreferencesDataSource;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -242,7 +243,9 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
             }
 
 
-            repo= new RecordatorioRepository(new RecordatorioPreferencesDataSource(getContext()));
+          //  repo= new RecordatorioRepository(new RecordatorioPreferencesDataSource(getContext()));
+            repo= new RecordatorioRepository(RecordatorioRoomDataSource.getInstance(getContext()));
+
             if( repo.saveRecordatorio(r)){
                 Toast.makeText(getContext(), "Se guardo", Toast.LENGTH_LONG).show();
                 btonGuardar.setVisibility(View.GONE);
@@ -264,7 +267,9 @@ public class CreacionRecordatorioFragment extends Fragment implements View.OnCli
             }
         }
 
-    }
+
+
+}
 
 
 

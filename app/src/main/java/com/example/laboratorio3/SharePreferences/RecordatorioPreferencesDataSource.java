@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.example.laboratorio3.DataSource.RecordatorioDataSource;
-import com.example.laboratorio3.Model.Recordatorio;
 import com.example.laboratorio3.Mapper.RecordatorioDto;
 
 import org.json.JSONObject;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class RecordatorioPreferencesDataSource implements RecordatorioDataSource {
+public class RecordatorioPreferencesDataSource implements RecordatorioDataSource  {
     private final SharedPreferences sharedPreferences;
 
     public RecordatorioPreferencesDataSource(Context context) {

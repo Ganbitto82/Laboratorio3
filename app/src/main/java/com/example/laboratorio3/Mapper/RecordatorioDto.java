@@ -3,6 +3,9 @@ package com.example.laboratorio3.Mapper;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.example.laboratorio3.Conversor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +17,7 @@ public class RecordatorioDto {
     @NonNull
     private Integer id;
     private String texto;
+    @TypeConverters({Conversor.class})
     private Date fecha;
 
     public RecordatorioDto(){}
