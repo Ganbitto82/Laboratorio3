@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import com.example.laboratorio3.Conversor;
+import com.example.laboratorio3.Util.Conversor;
 
 import org.json.JSONException;
 import org.json.JSONObject;

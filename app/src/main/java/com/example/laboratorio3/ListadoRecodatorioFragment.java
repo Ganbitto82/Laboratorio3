@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.laboratorio3.Model.Recordatorio;
 import com.example.laboratorio3.Repository.RecordatorioRepository;
+import com.example.laboratorio3.Retrofit.RecordatorioRetrofitDataSource;
 import com.example.laboratorio3.Room.RecordatorioRoomDataSource;
 import com.example.laboratorio3.SharePreferences.RecordatorioPreferencesDataSource;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -79,9 +80,16 @@ public class ListadoRecodatorioFragment extends Fragment {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
 
-        try{
+        /*************  SHAREPREFERENCES  *******/
+
            // repo= new RecordatorioRepository(new RecordatorioPreferencesDataSource(getContext()));
-            repo= new RecordatorioRepository(RecordatorioRoomDataSource.getInstance(getContext()));
+        /*************        ROOM        *******/
+           // repo= new RecordatorioRepository(new RecordatorioRoomDataSource(getContext()));
+        /*************    Retrofit    ***********/
+        String ususario="";
+        String pass="";
+        repo= new RecordatorioRepository(new RecordatorioRetrofitDataSource(ususario,pass));
+
             List<Recordatorio> recordatorios=new ArrayList<Recordatorio>();
 
 
@@ -91,10 +99,7 @@ public class ListadoRecodatorioFragment extends Fragment {
             else {
                 Toast.makeText(getContext(),"NO hay Recordatorios", Toast.LENGTH_LONG).show();
             }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+
 
 
 

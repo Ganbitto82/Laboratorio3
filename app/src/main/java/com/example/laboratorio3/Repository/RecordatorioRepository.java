@@ -21,9 +21,7 @@ public class RecordatorioRepository {
 
     public boolean saveRecordatorio(Recordatorio reco){
         final Boolean[] resultado = new Boolean[1];
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
+
                 RecordatorioMapper rm = new RecordatorioMapper();
                 RecordatorioDto dto=rm.fromDomainModelTODto(reco);
                 datasource.guardarRecordatorio(dto, new RecordatorioDataSource.GuardarRecordatorioCallback() {
@@ -32,32 +30,21 @@ public class RecordatorioRepository {
                         resultado[0] = new Boolean(exito);
                     }
                 });
-            }
 
-        };
-        r.run();
         return resultado[0];
     }
     public List<Recordatorio> getRecordatorios(){
         final List<Recordatorio>[] recordatorios = new List[]{new ArrayList<Recordatorio>()};
-        RecordatorioMapper rm = new RecordatorioMapper();
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-
-                datasource.recuperarRecordatorios(new RecordatorioDataSource.RecuperarRecordatorioCallback() {
-                    @Override
-                    public void resultado(boolean exito, List<RecordatorioDto> recordatoriosDto) {
+          RecordatorioMapper rm = new RecordatorioMapper();
+          datasource.recuperarRecordatorios(new RecordatorioDataSource.RecuperarRecordatorioCallback() {
+           @Override
+            public void resultado(boolean exito, List<RecordatorioDto> recordatoriosDto) {
                         if(exito){
-                            //  rm.fromListDtoToListDomainModel(recordatoriosDto);
-                            //Collections.copy(recordatorios,rm.fromListDtoToListDomainModel(recordatoriosDto));
-                            recordatorios[0] = rm.fromListDtoToListDomainModel(recordatoriosDto).stream().collect(Collectors.toList());
+                           recordatorios[0] = rm.fromListDtoToListDomainModel(recordatoriosDto).stream().collect(Collectors.toList());
                         }
                     }
                 });
-            }
-        };
-        r.run();
+
         return recordatorios[0];
     }
 

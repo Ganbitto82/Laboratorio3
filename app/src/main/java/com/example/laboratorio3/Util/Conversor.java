@@ -1,4 +1,4 @@
-package com.example.laboratorio3;
+package com.example.laboratorio3.Util;
 
 import androidx.room.TypeConverter;
 
